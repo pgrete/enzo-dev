@@ -45,8 +45,10 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
 
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
   int B1Num, B2Num, B3Num, PhiNum;
+  int SGSKinEnNum, SGSMagEnNum;
   this->IdentifyPhysicalQuantities(DensNum, GENum, Vel1Num, Vel2Num, Vel3Num,
       TENum, B1Num, B2Num, B3Num, PhiNum);
+  this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
 
   float* rho;
   // if an explicit filter should be used
@@ -94,6 +96,8 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
           Tau[SGSYZ][igrid] += CDeltaSqr * rho[igrid] * JacVel[SGSY][l][igrid] * JacVel[SGSZ][l][igrid];
           Tau[SGSXZ][igrid] += CDeltaSqr * rho[igrid] * JacVel[SGSX][l][igrid] * JacVel[SGSZ][l][igrid];
         }
+
+        BaryonField[SGSKinEnNum][igrid] = 0.5 * (Tau[XX][igrid] + Tau[YY][igrid] + Tau[ZZ][igrid]);
 
       }
 
@@ -200,6 +204,9 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
   if (debug1)
     printf("[%"ISYM"] grid::SGS_AddMom_nonliner_magnetic start\n",MyProcessorNumber);
 
+  int SGSKinEnNum, SGSMagEnNum;
+  this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
+  
   int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
@@ -212,6 +219,7 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
     StartIndex[dim] = GridStartIndex[dim] - 1;
     EndIndex[dim] = GridEndIndex[dim] + 1;
   }
+  
 
 
   // the combined prefactor
@@ -242,6 +250,8 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
           Tau[SGSYZ][igrid] -= CDeltaSqr * JacB[SGSY][l][igrid] * JacB[SGSZ][l][igrid];
           Tau[SGSXZ][igrid] -= CDeltaSqr * JacB[SGSX][l][igrid] * JacB[SGSZ][l][igrid];
         }
+        
+        BaryonField[SGSMagEnNum][igrid] = 0.5 * CDeltaSqr * turbMagPres;
 
         // the turbulent magnetic pressure component
         Tau[SGSXX][igrid] += CDeltaSqr * turbMagPres/2.;

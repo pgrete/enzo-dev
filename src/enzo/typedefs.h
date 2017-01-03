@@ -171,15 +171,19 @@ const field_type
   CRDensity = 97,
  
   /* IR photodetachment fields */
-  kdissH2II = 98,
-  kphHM     = 99,
+  kdissH2II = 100,
+  kphHM     = 104,
 
   /* Real and Imag of Wave Function */
   RePsi = 101,
   ImPsi = 102,
   FDMDensity = 103,
 
-  FieldUndefined  = 104;
+  /* SGS energies */
+  SGSKinEn = 98,
+  SGSMagEn = 99,
+
+  FieldUndefined  = 105;
 
 /*
 enum field_type {Density, TotalEnergy, InternalEnergy, Pressure,
