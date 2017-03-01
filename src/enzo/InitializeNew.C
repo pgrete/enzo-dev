@@ -297,6 +297,14 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
     ENZO_FAIL("Error in ReadParameterFile.");
   }
 
+  if (SGSTrackInstantaneousSGSEnergies && (
+      SGScoeffEnS2StarTrace != 0. ||
+      SGScoeffSSu != 0. ||
+      SGScoeffSSb != 0. ||
+      SGScoeffNLuNormedEnS2Star != 0.))
+      ENZO_FAIL("Tracking SGS energies is currently only supported for NLu and NLb model!");
+
+
   //Ensure old style MHD_CT parameter files still work.
   if( MHDCT_ParameterJuggle() == FAIL ){
     ENZO_FAIL("Invalid parameter from old style MHD CT");

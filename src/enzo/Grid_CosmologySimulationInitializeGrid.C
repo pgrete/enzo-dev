@@ -311,6 +311,11 @@ int grid::CosmologySimulationInitializeGrid(
 	FieldType[PSTempNum = NumberOfBaryonFields++] = PreShockTemperature;
 	FieldType[PSDenNum = NumberOfBaryonFields++] = PreShockDensity;
       }
+    }
+
+    if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+      FieldType[NumberOfBaryonFields++] = SGSKinEn;
+      FieldType[NumberOfBaryonFields++] = SGSMagEn;
     }    
   }
  

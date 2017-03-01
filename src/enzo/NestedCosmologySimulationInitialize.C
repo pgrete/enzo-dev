@@ -135,6 +135,8 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *RePsiName = "Re_Psi"; 
   char *ImPsiName = "Im_Psi"; 
   char *FDMDensityName = "FDMDensity"; 
+  char *SGSKinEnName = "SGSKinEn";
+  char *SGSMagEnName = "SGSMagEn";
 
  
   char *ExtraNames[2] = {"Z_Field1", "Z_Field2"};
@@ -763,6 +765,10 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
     DataLabel[i++] = (char*) FDMDensityName;
   }
 
+ if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+     DataLabel[i++] = SGSKinEnName;
+     DataLabel[i++] = SGSMagEnName;
+ } 
  
 
   for (j = 0; j < i; j++)

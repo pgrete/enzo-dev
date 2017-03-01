@@ -209,7 +209,7 @@ int DrivenFlowInitialize(FILE *fptr, FILE *Outfptr,
     DataLabel[count++] = StochAccel2Name;
     DataLabel[count++] = StochAccel3Name;
 
-  if (UseSGSModel) {
+  if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
       DataLabel[count++] = SGSKinEnName;
       DataLabel[count++] = SGSMagEnName;
   }

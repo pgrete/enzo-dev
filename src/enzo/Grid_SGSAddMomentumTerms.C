@@ -30,6 +30,8 @@
 #include "ExternalBoundary.h"
 #include "Grid.h"
 
+int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
+
 /* 
  * This function adds to the SGS stress tensor (Reynolds stress component)
  * the pure (unscaled) nonlinear model
@@ -48,7 +50,9 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
   int SGSKinEnNum, SGSMagEnNum;
   this->IdentifyPhysicalQuantities(DensNum, GENum, Vel1Num, Vel2Num, Vel3Num,
       TENum, B1Num, B2Num, B3Num, PhiNum);
-  this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
+
+  if (SGSTrackInstantaneousSGSEnergies)
+    this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
 
   float* rho;
   // if an explicit filter should be used
@@ -75,7 +79,6 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
     EndIndex[dim] = GridEndIndex[dim] + 1;
   }
 
-
   // the combined prefactor
   float CDeltaSqr = 1./12. * SGScoeffNLu * POW(SGSFilterWidth,2.) *
     POW(CellWidth[0][0]*CellWidth[1][0]*CellWidth[2][0],2./3.);
@@ -97,7 +100,8 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
           Tau[SGSXZ][igrid] += CDeltaSqr * rho[igrid] * JacVel[SGSX][l][igrid] * JacVel[SGSZ][l][igrid];
         }
 
-        BaryonField[SGSKinEnNum][igrid] = 0.5 * (Tau[XX][igrid] + Tau[YY][igrid] + Tau[ZZ][igrid]);
+        if (SGSTrackInstantaneousSGSEnergies)
+            BaryonField[SGSKinEnNum][igrid] = 0.5 * (Tau[XX][igrid] + Tau[YY][igrid] + Tau[ZZ][igrid]);
 
       }
 
@@ -205,7 +209,8 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
     printf("[%"ISYM"] grid::SGS_AddMom_nonliner_magnetic start\n",MyProcessorNumber);
 
   int SGSKinEnNum, SGSMagEnNum;
-  this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
+  if (SGSTrackInstantaneousSGSEnergies)
+    this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
   
   int size = 1;
   int StartIndex[MAX_DIMENSION];
@@ -251,7 +256,8 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
           Tau[SGSXZ][igrid] -= CDeltaSqr * JacB[SGSX][l][igrid] * JacB[SGSZ][l][igrid];
         }
         
-        BaryonField[SGSMagEnNum][igrid] = 0.5 * CDeltaSqr * turbMagPres;
+        if (SGSTrackInstantaneousSGSEnergies)
+            BaryonField[SGSMagEnNum][igrid] = 0.5 * CDeltaSqr * turbMagPres;
 
         // the turbulent magnetic pressure component
         Tau[SGSXX][igrid] += CDeltaSqr * turbMagPres/2.;
@@ -524,10 +530,15 @@ int grid::SGS_AddMomentumTerms(float **dU) {
   int n = 0;
   int igrid, ip1, im1, jp1, jm1, kp1, km1;
   float MomxIncr,MomyIncr,MomzIncr,EtotIncr;
+  
+  float a = 1.0, dadt = 0.0;
+  if (ComovingCoordinates && Time > tiny_number)
+    if (CosmologyComputeExpansionFactor(Time, &a, &dadt) == FAIL)
+      fprintf(stderr, "grid::ComputeSGSTerms: Error in CosmologyComputeExpansionFactors.\n");
 
-  float facX = 1. / (2. * CellWidth[0][0]);
-  float facY = 1. / (2. * CellWidth[1][0]);
-  float facZ = 1. / (2. * CellWidth[2][0]);
+  float facX = 1. / (2. * a * CellWidth[0][0]);
+  float facY = 1. / (2. * a * CellWidth[1][0]);
+  float facZ = 1. / (2. * a * CellWidth[2][0]);
 
   for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++)
     for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++)

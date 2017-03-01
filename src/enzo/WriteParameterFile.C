@@ -524,6 +524,7 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   fprintf(fptr, "UseSGSModel                    = %"ISYM"\n", UseSGSModel);
   fprintf(fptr, "SGSFilterWidth                 = %"FSYM"\n", SGSFilterWidth);
   fprintf(fptr, "SGSFilterStencil               = %"ISYM"\n", SGSFilterStencil);
+  fprintf(fptr, "SGSTrackInstantaneousSGSEnergies = %"ISYM"\n", SGSTrackInstantaneousSGSEnergies);
   fprintf(fptr, "SGSFilterWeights               = %"FSYM" %"FSYM" %"FSYM" %"FSYM"\n",
     SGSFilterWeights[0],SGSFilterWeights[1],SGSFilterWeights[2],SGSFilterWeights[3]);
   fprintf(fptr, "SGScoeffERS2M2Star             = %"FSYM"\n", SGScoeffERS2M2Star);

@@ -63,7 +63,7 @@ int grid::DrivenFlowInitializeGrid(float DrivenFlowDensity,
   FieldType[NumberOfBaryonFields++] = DrivingField2;
   FieldType[NumberOfBaryonFields++] = DrivingField3;
 
-  if (UseSGSModel) {
+  if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
       FieldType[NumberOfBaryonFields++] = SGSKinEn;
       FieldType[NumberOfBaryonFields++] = SGSMagEn;
   }

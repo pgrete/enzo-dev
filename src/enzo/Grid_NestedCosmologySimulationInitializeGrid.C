@@ -413,6 +413,10 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	FieldType[PSDenNum = NumberOfBaryonFields++] = PreShockDensity;
       }
     }    
+    if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+      FieldType[NumberOfBaryonFields++] = SGSKinEn;
+      FieldType[NumberOfBaryonFields++] = SGSMagEn;
+    }    
   }
 
   if(QuantumPressure == 1){
