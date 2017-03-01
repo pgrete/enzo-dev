@@ -136,6 +136,8 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *PhiName = "Phi";
   char *DebugName = "Debug";
   char *Phi_pName = "Phip";
+  char *SGSKinEnName = "SGSKinEn";
+  char *SGSMagEnName = "SGSMagEn";
 
 #ifdef TRANSFER
   char *RadName = "Grey_Radiation_Energy";
@@ -815,7 +817,12 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
       DataLabel[i++] = PSTempName;
       DataLabel[i++] = PSDenName;
     }
-  } 
+  }
+
+ if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+     DataLabel[i++] = SGSKinEnName;
+     DataLabel[i++] = SGSMagEnName;
+ } 
 
   for (j = 0; j < i; j++)
     DataUnits[j] = NULL;

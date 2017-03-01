@@ -132,6 +132,8 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *PhiName = "Phi";
   char *DebugName = "Debug";
   char *Phi_pName = "Phip";
+  char *SGSKinEnName = "SGSKinEn";
+  char *SGSMagEnName = "SGSMagEn";
 
  
   char *ExtraNames[2] = {"Z_Field1", "Z_Field2"};
@@ -752,6 +754,10 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
       DataLabel[i++] = PSDenName;
     }
   } 
+ if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+     DataLabel[i++] = SGSKinEnName;
+     DataLabel[i++] = SGSMagEnName;
+ } 
  
 
   for (j = 0; j < i; j++)

@@ -170,7 +170,11 @@ const field_type
   /* Cosmic Ray Energy Density */
   CRDensity = 97,
 
-  FieldUndefined  = 98;
+  /* SGS energies */
+  SGSKinEn = 98,
+  SGSMagEn = 99,
+  
+  FieldUndefined  = 100;
 
 /*
 enum field_type {Density, TotalEnergy, InternalEnergy, Pressure,

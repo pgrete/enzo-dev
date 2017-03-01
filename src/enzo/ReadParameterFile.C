@@ -534,6 +534,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     
     ret += sscanf(line, "UseSGSModel = %"ISYM, &UseSGSModel);
     ret += sscanf(line, "SGSFilterStencil = %"ISYM, &SGSFilterStencil);
+    ret += sscanf(line, "SGSTrackInstantaneousSGSEnergies = %"ISYM, &SGSTrackInstantaneousSGSEnergies);
     ret += sscanf(line, "SGSFilterWidth = %"FSYM, &SGSFilterWidth);
     ret += sscanf(line, "SGSFilterWeights = %"FSYM"%"FSYM"%"FSYM"%"FSYM,
         &SGSFilterWeights[0],&SGSFilterWeights[1],&SGSFilterWeights[2],&SGSFilterWeights[3]);

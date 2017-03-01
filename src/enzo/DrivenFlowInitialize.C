@@ -46,6 +46,8 @@ int DrivenFlowInitialize(FILE *fptr, FILE *Outfptr,
   char *StochAccel1Name = "x-acceleration";
   char *StochAccel2Name = "y-acceleration";
   char *StochAccel3Name = "z-acceleration";
+  char *SGSKinEnName = "SGSKinEn";
+  char *SGSMagEnName = "SGSMagEn";
 
   /* declarations */
 
@@ -206,6 +208,12 @@ int DrivenFlowInitialize(FILE *fptr, FILE *Outfptr,
     DataLabel[count++] = StochAccel1Name;
     DataLabel[count++] = StochAccel2Name;
     DataLabel[count++] = StochAccel3Name;
+
+  if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+      DataLabel[count++] = SGSKinEnName;
+      DataLabel[count++] = SGSMagEnName;
+  }
+
 
   /* Write parameters to parameter output file */
 

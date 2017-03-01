@@ -306,3 +306,19 @@ int grid::IdentifyPotentialField(int &PotenNum, int &Acce1Num, int &Acce2Num, in
 
   return SUCCESS;
 }
+
+int grid::IdentifySGSFields(int &SGSKinEnNum, int &SGSMagEnNum)
+{
+
+  SGSKinEnNum = SGSMagEnNum = 0;
+
+  if ((SGSKinEnNum = FindField(SGSKinEn, FieldType, NumberOfBaryonFields)) < 0) {
+        ENZO_FAIL("Cannot find SGSKinEn");
+  }
+
+  if ((SGSMagEnNum = FindField(SGSMagEn, FieldType, NumberOfBaryonFields)) < 0) {
+        ENZO_FAIL("Cannot find SGSMagEn");
+  }
+
+  return SUCCESS;
+}
