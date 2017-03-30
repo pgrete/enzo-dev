@@ -8,7 +8,12 @@
 # AUTHOR:      LRZ support (for SuperMIG)
 #              modified by Luigi Iapichino, Wolfram Schmidt
 # DATE:        November 2012, March 2017
-# NOTE:        Required modules: fftw/mpi, hdf5, szip, gsl
+# NOTE:        Currently Loaded Modulefiles:
+#   1) admin/1.0           6) poe/1.4            11) hdf5/serial/1.8.15 
+#   2) tempdir/1.0         7) mpi.ibm/1.4        12) gsl/1.16           
+#   3) lrztools/1.0        8) lrz/default        13) mercurial/2.0      
+#   4) intel/16.0          9) fftw/mpi/3.3       
+#   5) mkl/11.3           10) szip/2.1           
 #
 #=======================================================================
 
@@ -115,7 +120,7 @@ MACH_LIBS        = $(LOCAL_LIBS_HDF5) $(LOCAL_LIBS_MACH)
 MACH_LIBS_MPI    = $(LOCAL_LIBS_MPI)
 MACH_LIBS_HYPRE  = $(LOCAL_LIBS_HYPRE)
 
-LOCAL_GRACKLE_INSTALL = /home/hpc/pr62ze/lu78tar6/local
+LOCAL_GRACKLE_INSTALL = $(HOME)/local
 LOCAL_INCLUDES_GRACKLE = -I$(LOCAL_GRACKLE_INSTALL)/include
 MACH_INCLUDES_GRACKLE = $(LOCAL_INCLUDES_GRACKLE)
 LOCAL_LIBS_GRACKLE = -L$(LOCAL_GRACKLE_INSTALL)/lib -lgrackle
