@@ -1,0 +1,124 @@
+#=======================================================================
+#
+# FILE:        Make.mach.supermuc
+#
+# DESCRIPTION: Makefile settings for Enzo 2.5 on the SuperMUC
+#  (supermuc.lrz.de)
+#
+# AUTHOR:      LRZ support (for SuperMIG)
+#              modified by Luigi Iapichino, Wolfram Schmidt
+# DATE:        November 2012, March 2017
+# NOTE:        Currently Loaded Modulefiles:
+#   1) admin/1.0           6) poe/1.4            11) hdf5/serial/1.8.15 
+#   2) tempdir/1.0         7) mpi.ibm/1.4        12) gsl/1.16           
+#   3) lrztools/1.0        8) lrz/default        13) mercurial/2.0      
+#   4) intel/16.0          9) fftw/mpi/3.3       
+#   5) mkl/11.3           10) szip/2.1           
+#
+#=======================================================================
+
+MACH_TEXT  = SUPERMUC (Make.mach.supermuc)
+MACH_VALID = 1
+MACH_FILE  = Make.mach.supermuc
+
+#-----------------------------------------------------------------------
+# Commands to run test executables
+#-----------------------------------------------------------------------
+
+
+#-----------------------------------------------------------------------
+# Install paths (local variables)
+#-----------------------------------------------------------------------
+
+LOCAL_MPI_INSTALL    = $(MPI_BASE)
+LOCAL_HDF5_INSTALL   = $(HDF5_BASE)
+LOCAL_SZIP_INSTALL   = $(SZIP_BASE)
+
+#-----------------------------------------------------------------------
+# Compiler settings
+#-----------------------------------------------------------------------
+
+MACH_CPP       = cpp # icc was the solution proposed by the support, but this works, too, and 
+                     # is more similar to the templates from other machines.
+
+# With MPI
+
+MACH_CC_MPI    = mpicc
+MACH_CXX_MPI   = mpiCC
+MACH_FC_MPI    = mpif90
+MACH_F90_MPI   = mpif90
+MACH_LD_MPI    = mpiCC
+
+# Without MPI
+
+MACH_CC_NOMPI  = $(MACH_CC_MPI)
+MACH_CXX_NOMPI = $(MACH_CXX_MPI)
+MACH_FC_NOMPI  = $(MACH_FC_MPI)
+MACH_F90_NOMPI = $(MACH_F90_MPI)
+MACH_LD_NOMPI  = $(MACH_LD_MPI)
+
+#-----------------------------------------------------------------------
+# Machine-dependent defines
+#-----------------------------------------------------------------------
+
+MACH_DEFINES   = -DHAVE_GNUPLOT -DLINUX -DH5_USE_16_API -DMPICH_IGNORE_CXX_SEEK
+
+#-----------------------------------------------------------------------
+# Compiler flag settings
+#-----------------------------------------------------------------------
+
+MACH_CPPFLAGS = -E -P -traditional
+MACH_CFLAGS   = 
+MACH_CXXFLAGS = 
+MACH_FFLAGS   = 
+MACH_F90FLAGS = -check all
+MACH_LDFLAGS  = -L$(INTEL_LIBDIR) -lifcore -lifport
+MACH_ARFLAGS  = rcs
+
+#-----------------------------------------------------------------------
+# Precision-related flags
+#-----------------------------------------------------------------------
+
+MACH_FFLAGS_INTEGER_32 = -i4
+MACH_FFLAGS_INTEGER_64 = -i8
+MACH_FFLAGS_REAL_32    = 
+MACH_FFLAGS_REAL_64    = -r8
+
+#-----------------------------------------------------------------------
+# Optimization flags
+#-----------------------------------------------------------------------
+
+MACH_OPT_WARN        = -w2 -Wall -g -Wcheck -wd981,1418,1419,279
+MACH_OPT_DEBUG       = -g -traceback 
+MACH_OPT_HIGH        = -O2
+MACH_OPT_AGGRESSIVE  = -O3 -ipo
+
+#-----------------------------------------------------------------------
+# Includes
+#-----------------------------------------------------------------------
+
+LOCAL_INCLUDES_MPI    = -I$(LOCAL_MPI_INSTALL)/include 
+LOCAL_INCLUDES_HDF5   = -I$(LOCAL_HDF5_INSTALL)/include
+LOCAL_INCLUDES_IOBUF  = -I$(IOBUF_INC)
+
+MACH_INCLUDES         = $(LOCAL_INCLUDES_HDF5) $(LOCAL_INCLUDES_SPRNG)
+MACH_INCLUDES_MPI     = $(LOCAL_INCLUDES_MPI)
+MACH_INCLUDES_HYPRE   = $(LOCAL_INCLUDES_HYPRE)
+
+#-----------------------------------------------------------------------
+# Libraries
+#-----------------------------------------------------------------------
+
+LOCAL_LIBS_MACH  = -L$(INTEL_LIBDIR) -lifcore -ifport
+LOCAL_LIBS_MPI   = -L$(LOCAL_MPI_INSTALL)/lib
+LOCAL_LIBS_HDF5  = -L$(LOCAL_HDF5_INSTALL)/lib -lhdf5 -L$(SZIP_BASE)/lib -lsz -L/usr/lib -lz
+
+MACH_LIBS        = $(LOCAL_LIBS_HDF5) $(LOCAL_LIBS_MACH)
+MACH_LIBS_MPI    = $(LOCAL_LIBS_MPI)
+MACH_LIBS_HYPRE  = $(LOCAL_LIBS_HYPRE)
+
+LOCAL_GRACKLE_INSTALL = $(HOME)/local
+LOCAL_INCLUDES_GRACKLE = -I$(LOCAL_GRACKLE_INSTALL)/include
+MACH_INCLUDES_GRACKLE = $(LOCAL_INCLUDES_GRACKLE)
+LOCAL_LIBS_GRACKLE = -L$(LOCAL_GRACKLE_INSTALL)/lib -lgrackle
+MACH_LIBS_GRACKLE = $(LOCAL_LIBS_GRACKLE)
