@@ -1,0 +1,131 @@
+#=======================================================================
+#
+# FILE:        Make.mach.ubuntu-hardy
+#
+# DESCRIPTION: Makefile settings for a machine running Ubuntu 8.04
+#
+# AUTHOR:      Rick Wagner (rick@ucsd.edu)
+#
+# DATE:        2008-09-16
+#
+# This configuration assumes that build-essentials, gfortran, 
+# OpenMPI and HDF5 have been installed using apt-get.
+#
+#=======================================================================
+
+#MACH_TEXT  = Generic Ubuntu 8.04
+#MACH_VALID = 1
+#MACH_FILE  = Make.mach.ubuntu-hardy
+
+MACH_TEXT  = GNU LINUX
+MACH_VALID = 1
+MACH_FILE  = Make.mach.supermuc-gnu
+
+#-----------------------------------------------------------------------
+# Install paths (local variables)
+#-----------------------------------------------------------------------
+
+LOCAL_MPI_INSTALL = $MPI_BASE
+LOCAL_MPI_INSTALL    = $(MPI_BASE)
+LOCAL_HDF5_INSTALL   = $(HDF5_BASE)
+LOCAL_SZIP_INSTALL   = $(SZIP_BASE)
+
+#-----------------------------------------------------------------------
+# Compiler settings
+#-----------------------------------------------------------------------
+
+MACH_CPP       = CC # C preprocessor command
+
+# With MPI
+
+MACH_CC_MPI    = mpicc # C compiler when using MPI
+MACH_CXX_MPI   = mpicxx # C++ compiler when using MPI
+MACH_FC_MPI    = mpif77 # Fortran 77 compiler when using MPI
+MACH_F90_MPI   = mpif90 # Fortran 90 compiler when using MPI
+MACH_LD_MPI    = mpicxx # Linker when using MPI
+
+#MACH_CC_MPI    = $(LOCAL_MPI_INSTALL)/bin/mpicc # C compiler when using MPI
+#MACH_CXX_MPI   = $(LOCAL_MPI_INSTALL)/bin/mpicxx #compiler when using MPI
+#MACH_FC_MPI    = $(LOCAL_MPI_INSTALL)/bin/mpif77 # Fortran 77 compiler when using MPI
+#MACH_F90_MPI   = $(LOCAL_MPI_INSTALL)/bin/mpif90 ##gfortran # Fortran 90 compiler when using MPI
+#MACH_LD_MPI    = $(LOCAL_MPI_INSTALL)/bin/mpicxx ##mpic++ # Linker when using MPI
+
+# Without MPI
+MACH_CC_NOMPI  = cc # C compiler when not using MPI
+MACH_CXX_NOMPI = CC # C++ compiler when not using MPI
+MACH_FC_NOMPI  = ftn # Fortran 77 compiler when not using MPI
+MACH_F90_NOMPI = ftn # Fortran 90 compiler when not using MPI
+MACH_LD_NOMPI  = CC # Linker when not using MPI
+
+#-----------------------------------------------------------------------
+# Machine-dependent defines
+#-----------------------------------------------------------------------
+
+MACH_DEFINES   = -DLINUX -DH5_USE_16_API 
+
+#-----------------------------------------------------------------------
+# Compiler flag settings
+#-----------------------------------------------------------------------
+
+
+MACH_CPPFLAGS = -P -traditional 
+MACH_CFLAGS   = 
+MACH_CXXFLAGS = #-DMPICH_IGNORE_CXX_SEEK
+MACH_FFLAGS   = #-fno-second-underscore
+MACH_F90FLAGS = #-fno-second-underscore
+MACH_LDFLAGS  = 
+
+#-----------------------------------------------------------------------
+# Precision-related flags
+#-----------------------------------------------------------------------
+
+MACH_FFLAGS_INTEGER_32 =  # -fdefault-integer-8
+MACH_FFLAGS_INTEGER_64 = -i8 #-fdefault-integer-8 #-i8 ## -i8
+MACH_FFLAGS_REAL_32    =  #-fdefault-real-8 -fdefault-double-8
+MACH_FFLAGS_REAL_64    = -r8 #-fdefault-real-8 -fdefault-double-8 #-r8 #-r8
+
+#-----------------------------------------------------------------------
+# Optimization flags
+#-----------------------------------------------------------------------
+
+MACH_OPT_WARN        = -Wall -g
+MACH_OPT_DEBUG       = -O3 -g
+MACH_OPT_HIGH        =  -O2 #-ftz -mieee-fp -fp-speculation=off -prec-sqrt -prec-div
+MACH_OPT_AGGRESSIVE  =  -O3 -march=core-avx2 #-hfp3 #-O2 -ftz -mieee-fp -fp-speculation=off -prec-sqrt -prec-div
+                        
+#-----------------------------------------------------------------------
+# Includes
+#-----------------------------------------------------------------------
+
+LOCAL_INCLUDES_MPI    =  ##$(LOCAL_MPI_INSTALL)/bin # MPI includes
+LOCAL_INCLUDES_HDF5   = -I$(LOCAL_HDF5_INSTALL)/include # HDF5 includes
+LOCAL_INCLUDES_HYPRE  = # hypre includes
+LOCAL_INCLUDES_PAPI   = # PAPI includes
+
+MACH_INCLUDES         = $(LOCAL_INCLUDES_HDF5)
+
+MACH_INCLUDES_MPI     = $(LOCAL_INCLUDES_MPI)
+MACH_INCLUDES_HYPRE   = $(LOCAL_INCLUDES_HYPRE)
+MACH_INCLUDES_PAPI    = $(LOCAL_INCLUDES_PAPI)
+
+#-----------------------------------------------------------------------
+# Libraries
+#-----------------------------------------------------------------------
+
+LOCAL_LIBS_MPI    = ##/home/astro73/mlatif/Libraries/MPICH2/lib/ # MPI libraries
+LOCAL_LIBS_HDF5   = -L$(LOCAL_HDF5_INSTALL)/lib -lhdf5 -lz # HDF5 libraries
+LOCAL_LIBS_HYPRE  = # hypre libraries
+LOCAL_LIBS_PAPI   = # PAPI libraries
+
+LOCAL_LIBS_MACH   = -lgfortran
+
+MACH_LIBS         = $(LOCAL_LIBS_HDF5) $(LOCAL_LIBS_MACH)
+MACH_LIBS_MPI     = $(LOCAL_LIBS_MPI)
+MACH_LIBS_HYPRE   = $(LOCAL_LIBS_HYPRE)
+MACH_LIBS_PAPI    = $(LOCAL_LIBS_PAPI)
+
+LOCAL_GRACKLE_INSTALL = $(HOME)/local
+LOCAL_INCLUDES_GRACKLE = -I$(LOCAL_GRACKLE_INSTALL)/include
+MACH_INCLUDES_GRACKLE = $(LOCAL_INCLUDES_GRACKLE)
+LOCAL_LIBS_GRACKLE = -L$(LOCAL_GRACKLE_INSTALL)/lib -lgrackle
+MACH_LIBS_GRACKLE = $(LOCAL_LIBS_GRACKLE)
