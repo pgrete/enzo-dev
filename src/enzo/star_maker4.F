@@ -7,7 +7,7 @@ c////////////////////////  SUBROUTINE STAR_MAKER \\\\\\\\\\\\\\\\\\\\\\\
 c
       subroutine star_maker4(nx, ny, nz,
      &                      d, dm, temp, u, v, w, cooltime,
-     &                      dt, r, metal, dx, t, z, procnum, 
+     &                      dt, r, metal, ksgs, dx, t, z, procnum, 
      &                      d1, x1, v1, t1,
      &                      nmax, xstart, ystart, zstart, ibuff, 
      &                      imetal, imethod, mintdyn,
@@ -77,6 +77,7 @@ c
       R_PREC    d(nx,ny,nz), dm(nx,ny,nz), temp(nx,ny,nz)
       R_PREC    u(nx,ny,nz), v(nx,ny,nz), w(nx,ny,nz)
       R_PREC    r(nx,ny,nz), cooltime(nx,ny,nz), metal(nx,ny,nz)
+      R_PREC    ksgs(nx,ny,nz)
       R_PREC    dt, dx, z
       R_PREC    d1, x1, v1, t1
       P_PREC xstart, ystart, zstart, t
@@ -93,10 +94,10 @@ c
 c  Locals:
 c
       INTG_PREC  i, j, k, ii
-      R_PREC   div, tdyn, dtot
-      R_PREC   pi, G, sndspdC,mproton
-      R_PREC   isosndsp2, starmass, starfraction, bmass, jeanmass
-      R_PREC   densthresh, timeconstant, gasfrac
+      R_PREC   div, tdyn, tcr, dtot
+      R_PREC   pi, G, sndspdC, mproton, k1, t2
+      R_PREC   isosndsp2, effsndsp2, starmass, starfraction, bmass, jeanmass
+      R_PREC   densthresh, timeconstant, gasfrac, epsff
       real*8 msolar
       parameter (pi=pi_val, G=GravConst, 
      &           sndspdC=1.3095e8_RKIND,
@@ -104,14 +105,18 @@ c
      &           mproton=mass_h)
 c
       ii = np
+      k1 = v1*v1
+c
+c  conversion of physical time to Gyr
+c
+      t2 = t1/3.156e16_RKIND
 c
 c  calculate density threshold.  odthresh is in proper particles per cc
 c  and (d1/mproton) gives the mean density of the universe in 
 c  particles/cm^3 (assuming hydrogen is dominant)
 c
 c
-      densthresh = odthresh / (d1 / mproton)
-
+c      densthresh = odthresh / (d1 / mproton)
 c
 c  calculate time constant for star formation.  This assumes that the
 c  user input is in units of years
@@ -133,22 +138,51 @@ c
 c
 c              2) is density greater than threshold?
 c
-               if (d(i,j,k) .lt. densthresh) goto 10
-
-c            make sure that we never give put than 90% of the cell's mass
-c            into a star particle
-
+c               if (d(i,j,k) .lt. densthresh) goto 10
+               if (d(i,j,k) .lt. odthresh) goto 10
+c
+c              calculate free-fall timescale from the total density
+c
+               dtot = ( d(i,j,k) + dm(i,j,k) )*d1
+               tdyn  = sqrt(3._RKIND*pi/32._RKIND/G/dtot)/t1
+               !tdyn = max(tdyn, mintdyn*3.15e7_RKIND/t1)
+c
+c              calculate effective crossing time from effective sound speed
+c              (eq. (4) in Semenov et al. 2016 in physical units)
+c
+               isosndsp2 = sndspdC * temp(i,j,k)
+               effsndsp2 = isosndsp2 + 2._RKIND*k1*ksgs(i,j,k)/d(i,j,k)
+               tcr = (0.5_RKIND*dble(x1*dx) / sqrt(effsndsp2))/t1
+c
+c              calculate star formation efficiency per free-fall time
+c              (eq. (3), Semenov et al. 2016)
+c              use parameter masseff as mass loss coefficient epsilon_w
+c
+               epsff = masseff * exp(-1.6_RKIND*tdyn/tcr)
+c
+c              make sure that we never put more than 90% of the cell's mass
+c              into a star particle
+#define NO_CONSTANT_EFFICIENCY
+c
+#ifdef CONSTANT_EFFICIENCY
+c              original version: use constant efficiency (Kravtsov 2003)
+c
                gasfrac = min( 0.9_RKIND, dt / timeconstant )
+#else
+c              use dynamical efficiency (Semenov et al. 2016)
+c
+               gasfrac = min( 0.9_RKIND, epsff*dt/tdyn )          
+#endif
 
-c            calculate star mass in solar masses.  If this is less than the
-c            user-defined threshold mass, do NOT make a star in this cell.
-c            This is not exactly in keeping with the spirit of the Kravtsov
-c            algorithm, and is somewhat degenerate with the density threshold,
-c            but we really don't want millions and millions of star particles.
+c              calculate star mass in solar masses.  If this is less than the
+c              user-defined threshold mass, do NOT make a star in this cell.
+c              This is not exactly in keeping with the spirit of the Kravtsov
+c              algorithm, and is somewhat degenerate with the density threshold,
+c              but we really don't want millions and millions of star particles.
 
                starmass = gasfrac*d(i,j,k)*dble(d1)*dble(x1*dx)**3
-     &                   / msolar
-
+     &                    / msolar
+c
                if(starmass .lt. smthresh) goto 10
 
 c
@@ -157,11 +191,15 @@ c
                ii = ii + 1
 
 
-c            fill in star particle attributes
+c              Fill in star particle attributes
 
                mp(ii)  = gasfrac * d(i,j,k)
                tcp(ii) = t
+#ifdef CONSTANT_EFFICIENCY
                tdp(ii) = timeconstant
+#else
+               tdp(ii) = tdyn/epsff
+#endif
                xp(ii) = xstart + (REAL(i,RKIND)-0.5_RKIND)*dx
                yp(ii) = ystart + (REAL(j,RKIND)-0.5_RKIND)*dx
                zp(ii) = zstart + (REAL(k,RKIND)-0.5_RKIND)*dx
@@ -190,6 +228,12 @@ c              Remove mass from grid
 c
                d(i,j,k) = (1._RKIND - gasfrac)*d(i,j,k)
 c
+               write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
+     &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
+     &            tdp(ii)*t2, tcp(ii)*t2, starmass, metalf(ii)
+c
+ 1000          format(i5,1x,10(1pe10.3,1x))
+c
 c              Do not generate more star particles than available
 c
                if (ii .eq. nmax) goto 20
@@ -206,7 +250,10 @@ c
          ERROR_MESSAGE
       endif
       np = ii
-
+c          
+      if (np .ne. 0) then
+         write(6,*) 'Stars created: number,time,level: ', np, t, level
+      endif
 cc
       return
       end

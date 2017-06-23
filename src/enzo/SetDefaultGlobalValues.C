@@ -408,7 +408,7 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   SGSNeedMixedFilteredQuantities = 0; // set automatically in ReadParameter file
   // disables two additional BaryonFields for kinetic and magnetic SGS energies
   SGSTrackInstantaneousSGSEnergies = 0; 
-  SGSFilterWidth = 0.; // off, i.e. use grid-scale quantities
+  SGSFilterWidth = 1.; // off, i.e. use grid-scale quantities
   for (i = 0; i < 4; i++)
     // discrete filter weights of explicit filter
     SGSFilterWeights[i] = 0.;

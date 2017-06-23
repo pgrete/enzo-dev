@@ -81,7 +81,7 @@ int FindSubgrids(HierarchyEntry *Grid, int level, int &TotalFlaggedCells,
     }
 
     for (i = 0; i < NumberOfBufferZones; i++)
-    NumberOfFlaggedCells = CurrentGrid->FlagBufferZones();
+      NumberOfFlaggedCells = CurrentGrid->FlagBufferZones();
 
   } 
 

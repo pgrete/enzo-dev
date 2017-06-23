@@ -144,7 +144,7 @@ extern "C" void FORTRAN_NAME(star_maker3)(int *nx, int *ny, int *nz,
 extern "C" void FORTRAN_NAME(star_maker4)(int *nx, int *ny, int *nz,
              float *d, float *dm, float *temp, float *u, float *v, float *w,
                 float *cooltime,
-             float *dt, float *r, float *metal, float *dx, FLOAT *t, float *z, 
+             float *dt, float *r, float *metal, float *ksgs, float *dx, FLOAT *t, float *z, 
              int *procnum,
              float *d1, float *x1, float *v1, float *t1,
              int *nmax, FLOAT *xstart, FLOAT *ystart, FLOAT *zstart, 
@@ -549,6 +549,15 @@ int grid::StarParticleHandler(HierarchyEntry* SubgridPointer, int level,
   int CRNum;
   const double m_h = 1.673e-24;
 
+  /* Find SGS energy fields */
+  int SGSKinEnNum, SGSMagEnNum;
+  if (STARMAKE_METHOD(KRAVTSOV_STAR)) {
+    if (SGSTrackInstantaneousSGSEnergies)
+      this->IdentifySGSFields(SGSKinEnNum, SGSMagEnNum);
+    else
+      ENZO_FAIL("Error in grid->StarParticleHandler: SGSTrackInstantaneousSGSEnergies must be set.\n");
+  }
+
   /* Find Multi-species fields. */
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
     DINum, DIINum, HDINum; 
@@ -909,7 +918,7 @@ int grid::StarParticleHandler(HierarchyEntry* SubgridPointer, int level,
        GridDimension, GridDimension+1, GridDimension+2,
        BaryonField[DensNum], dmfield, temperature, BaryonField[Vel1Num],
           BaryonField[Vel2Num], BaryonField[Vel3Num], cooling_time,
-       &dtFixed, BaryonField[NumberOfBaryonFields], MetalPointer, 
+       &dtFixed, BaryonField[NumberOfBaryonFields], MetalPointer, BaryonField[SGSKinEnNum],
           &CellWidthTemp, &Time, &zred, &MyProcessorNumber,
        &DensityUnits, &LengthUnits, &VelocityUnits, &TimeUnits,
        &MaximumNumberOfNewParticles, CellLeftEdge[0], CellLeftEdge[1],

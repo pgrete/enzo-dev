@@ -115,7 +115,7 @@ c
 c
       ii = np
 
-!     print*,'star_maker3: imetal is:',imetal
+c      print *,'star_maker3: imetal is:',imetal
 
 c
 c  for each zone, : "star" particle is created if answers to all the
@@ -255,9 +255,9 @@ c              Remove mass from grid
 c
                d(i,j,k) = (1._RKIND - starfraction)*d(i,j,k)
 c
-c               write(7+procnum,1000) level,bmass*starfraction,tcp(ii),
-c     &                           tdp(ii)*t1,d(i,j,k)*d1,z,metalf(ii)
-c
+               write(7+procnum,1000) level,bmass*starfraction,tcp(ii),
+     &                           tdp(ii)*t1,d(i,j,k)*d1,z,metalf(ii)
+
  1000          format(i5,1x,6(1pe10.3,1x))
 c
 c              Do not generate more star particles than available
@@ -277,9 +277,9 @@ c
       endif
       np = ii
 c
-c      if (np .ne. 0) then
-c         write(6,*) 'Stars created: number,time,level: ', np, t, level
-c      endif
+      if (np .ne. 0) then
+         write(6,*) 'Stars created: number,time,level: ', np, t, level
+      endif
 cc
       return
       end
