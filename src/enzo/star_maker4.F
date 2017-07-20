@@ -95,14 +95,15 @@ c  Locals:
 c
       INTG_PREC  i, j, k, ii
       R_PREC   div, tdyn, tcr, dtot
-      R_PREC   pi, G, sndspdC, mproton, k1, t2
+      R_PREC   pi, G, sndspdC, mproton, k1, t2, scale_sf
       R_PREC   isosndsp2, effsndsp2, starmass, starfraction, bmass, jeanmass
       R_PREC   densthresh, timeconstant, gasfrac, epsff
       real*8 msolar
       parameter (pi=pi_val, G=GravConst, 
      &           sndspdC=1.3095e8_RKIND,
      &           msolar=SolarMass,
-     &           mproton=mass_h)
+     &           mproton=mass_h,
+     &           scale_sf=1.0e2_RKIND*pc)
 c
       ii = np
       k1 = v1*v1
@@ -111,12 +112,14 @@ c  conversion of physical time to Gyr
 c
       t2 = t1/3.156e16_RKIND
 c
+c      write(6,*) 'star_maker4: ', dble(x1*dx), scale_sf
+c
 c  calculate density threshold.  odthresh is in proper particles per cc
 c  and (d1/mproton) gives the mean density of the universe in 
 c  particles/cm^3 (assuming hydrogen is dominant)
 c
 c
-c      densthresh = odthresh / (d1 / mproton)
+      densthresh = odthresh / (d1 / mproton)
 c
 c  calculate time constant for star formation.  This assumes that the
 c  user input is in units of years
@@ -138,8 +141,8 @@ c
 c
 c              2) is density greater than threshold?
 c
-c               if (d(i,j,k) .lt. densthresh) goto 10
-               if (d(i,j,k) .lt. odthresh) goto 10
+               if (d(i,j,k) .lt. densthresh) goto 10
+c               if (d(i,j,k) .lt. odthresh) goto 10
 c
 c              calculate free-fall timescale from the total density
 c
@@ -151,8 +154,10 @@ c              calculate effective crossing time from effective sound speed
 c              (eq. (4) in Semenov et al. 2016 in physical units)
 c
                isosndsp2 = sndspdC * temp(i,j,k)
-               effsndsp2 = isosndsp2 + 2._RKIND*k1*ksgs(i,j,k)/d(i,j,k)
-               tcr = (0.5_RKIND*dble(x1*dx) / sqrt(effsndsp2))/t1
+               effsndsp2 = isosndsp2 + 
+     &                     (2._RKIND*k1*ksgs(i,j,k)/d(i,j,k))*
+     &                     (scale_sf/dble(x1*dx))
+               tcr = 0.5_RKIND*(scale_sf/sqrt(effsndsp2))/t1
 c
 c              calculate star formation efficiency per free-fall time
 c              (eq. (3), Semenov et al. 2016)
@@ -162,7 +167,7 @@ c
 c
 c              make sure that we never put more than 90% of the cell's mass
 c              into a star particle
-#define NO_CONSTANT_EFFICIENCY
+#define CONSTANT_EFFICIENCY
 c
 #ifdef CONSTANT_EFFICIENCY
 c              original version: use constant efficiency (Kravtsov 2003)
@@ -230,9 +235,10 @@ c
 c
                write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
      &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
-     &            tdp(ii)*t2, tcp(ii)*t2, starmass, metalf(ii)
+     &            tdp(ii)*t2, tcp(ii)*t2, starmass, starmass/(dt*t1), 
+     &            starmass/(dt*t1*dble(x1*dx/Mpc)**3), metalf(ii)
 c
- 1000          format(i5,1x,10(1pe10.3,1x))
+ 1000          format(i5,1x,12(1pe10.3,1x))
 c
 c              Do not generate more star particles than available
 c

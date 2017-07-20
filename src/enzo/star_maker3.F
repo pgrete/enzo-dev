@@ -106,7 +106,7 @@ c  Locals:
 c
       INTG_PREC  i, j, k, ii
       R_PREC   div, tdyn, dtot
-      R_PREC   pi, G, sndspdC
+      R_PREC   pi, G, sndspdC, t2
       R_PREC   isosndsp2, starmass, starfraction, bmass, jeanmass
       real*8 msolar
       parameter (pi=pi_val, G=GravConst, 
@@ -115,6 +115,10 @@ c
 c
       ii = np
 
+c
+c  conversion of physical time to Gyr
+c
+      t2 = t1/3.156e16_RKIND
 c      print *,'star_maker3: imetal is:',imetal
 
 c
@@ -181,8 +185,8 @@ c
 c              6) Check to see if star is above threshold (given
 c                 in units of M_solar)
 c
-               starfraction = min(masseff*dt/tdyn, 0.9_RKIND)
                tdyn = max(tdyn, mintdyn*3.15e7_RKIND/t1)
+               starfraction = min(masseff*dt/tdyn, 0.9_RKIND)
 
 c
 c  STOCHASTIC STAR FORMATION HAS BEEN ADDED AGAIN - BWO 20 Dec 2002
@@ -255,10 +259,15 @@ c              Remove mass from grid
 c
                d(i,j,k) = (1._RKIND - starfraction)*d(i,j,k)
 c
-               write(7+procnum,1000) level,bmass*starfraction,tcp(ii),
-     &                           tdp(ii)*t1,d(i,j,k)*d1,z,metalf(ii)
+c               write(7+procnum,1000) level,bmass*starfraction,tcp(ii),
+c     &                           tdp(ii)*t1,d(i,j,k)*d1,z,metalf(ii)
+               write(7+procnum,1000) level, z, d(i,j,k)*d1/mass_h, 
+     &            sqrt(isosndsp2), tdp(ii)*t2, tcp(ii)*t2, 
+     &            bmass*starfraction, bmass*starfraction/(dt*t1), 
+     &            bmass*starfraction/(dt*t1*dble(x1*dx/Mpc)**3), 
+     &            metalf(ii)
 
- 1000          format(i5,1x,6(1pe10.3,1x))
+ 1000          format(i5,1x,9(1pe10.3,1x))
 c
 c              Do not generate more star particles than available
 c
