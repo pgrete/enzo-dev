@@ -137,7 +137,9 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *FDMDensityName = "FDMDensity"; 
   char *SGSKinEnName = "SGSKinEn";
   char *SGSMagEnName = "SGSMagEn";
-
+  char *AveMomt1Name = "AveMomtX";
+  char *AveMomt2Name = "AveMomtY";
+  char *AveMomt3Name = "AveMomtZ";
  
   char *ExtraNames[2] = {"Z_Field1", "Z_Field2"};
  
@@ -765,10 +767,15 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
     DataLabel[i++] = (char*) FDMDensityName;
   }
 
- if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+  if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
      DataLabel[i++] = SGSKinEnName;
      DataLabel[i++] = SGSMagEnName;
- } 
+  } 
+  if (UseKalmanFilter) {
+     DataLabel[i++] = AveMomt1Name;
+     DataLabel[i++] = AveMomt2Name;
+     DataLabel[i++] = AveMomt3Name;
+  } 
  
 
   for (j = 0; j < i; j++)

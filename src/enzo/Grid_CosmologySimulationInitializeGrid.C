@@ -128,6 +128,7 @@ int grid::CosmologySimulationInitializeGrid(
 #endif
   int MachNum, PSTempNum, PSDenNum;
   int kphHINum, kphHeINum, kphHeIINum, kdissH2INum, PhotoGammaNum;
+  int AveMomt1Num, AveMomt2Num, AveMomt3Num;	
  
   int ExtraField[2];
   int ForbidNum, iTE, iCR;
@@ -316,6 +317,11 @@ int grid::CosmologySimulationInitializeGrid(
     if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
       FieldType[NumberOfBaryonFields++] = SGSKinEn;
       FieldType[NumberOfBaryonFields++] = SGSMagEn;
+    }
+    if (UseKalmanFilter) {
+      FieldType[AveMomt1Num = NumberOfBaryonFields++] = AveMomtDensity1;
+      FieldType[AveMomt2Num = NumberOfBaryonFields++] = AveMomtDensity2;
+      FieldType[AveMomt3Num = NumberOfBaryonFields++] = AveMomtDensity3;
     }    
   }
  
@@ -610,6 +616,15 @@ int grid::CosmologySimulationInitializeGrid(
       }  // if(UseMHDCT == TRUE)              
     }
   }
+
+  if (UseKalmanFilter) {
+    for (int i = 0; i < size; i++) {
+      BaryonField[AveMomt1Num][i] = 0.0;
+      BaryonField[AveMomt2Num][i] = 0.0;
+      BaryonField[AveMomt3Num][i] = 0.0;
+    }
+  }
+
 
   } // end: if (NumberOfBaryonFields > 0)
  

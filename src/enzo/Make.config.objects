@@ -1092,6 +1092,7 @@ POBJS_CONFIG_LIB = \
         Grid_InitializeRadiativeTransferFields.o \
         Grid_InitializeSource.o \
 	Grid_InterpolateRadiationFromParent.o \
+	Grid_KalmanFiltering.o \
         Grid_MergePausedPhotonPackages.o \
         Grid_RegridPausedPhotonPackage.o \
         Grid_MoveAllPhotonPackages.o \

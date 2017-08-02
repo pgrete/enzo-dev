@@ -138,6 +138,9 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *Phi_pName = "Phip";
   char *SGSKinEnName = "SGSKinEn";
   char *SGSMagEnName = "SGSMagEn";
+  char *AveMomt1Name = "AveMomtX";
+  char *AveMomt2Name = "AveMomtY";
+  char *AveMomt3Name = "AveMomtZ";
 
 #ifdef TRANSFER
   char *RadName = "Grey_Radiation_Energy";
@@ -818,10 +821,15 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
     }
   }
 
- if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+  if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
      DataLabel[i++] = SGSKinEnName;
      DataLabel[i++] = SGSMagEnName;
- } 
+  }
+  if (UseKalmanFilter) {
+     DataLabel[i++] = AveMomt1Name;
+     DataLabel[i++] = AveMomt2Name;
+     DataLabel[i++] = AveMomt3Name;
+  } 
 
   for (j = 0; j < i; j++)
     DataUnits[j] = NULL;

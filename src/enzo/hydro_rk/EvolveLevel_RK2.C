@@ -410,6 +410,13 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       Grids[grid1]->GridData->AddRadiationPressureAcceleration();
 #endif /* TRANSFER */
 
+      /* Apply Kalman filter for temporal smoothing */
+      if (UseKalmanFilter) {
+         if (Grids[grid1]->GridData->KalmanFiltering() == FAIL) {
+            ENZO_FAIL("Error in grid->KalmanFiltering.\n");;
+         }
+      }
+
       /* Copy current fields (with their boundaries) to the old fields
 	  in preparation for the new step. */
 

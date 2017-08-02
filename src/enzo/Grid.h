@@ -2547,8 +2547,11 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
     void SGS_AddMom_scale_similarity_kinetic(float **Tau);
     void SGS_AddMom_scale_similarity_magnetic(float **Tau);
     void SGS_AddEMF_scale_similarity(float **EMF);
-    
+
     /* END Subgrid-scale modeling framework by P. Grete */
+
+    // function to apply the Kalman filtering procedure                                                                                                     
+    int KalmanFiltering();
 
 /* Comoving coordinate expansion terms. */
 

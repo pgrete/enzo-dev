@@ -126,8 +126,8 @@ int grid::NestedCosmologySimulationInitializeGrid(
   int ForbidNum;
   int MachNum, PSTempNum, PSDenNum;
   int RePsiNum, ImPsiNum, FDMDensNum;
+  int AveMomt1Num, AveMomt2Num, AveMomt3Num;	
 
- 
   inits_type *tempbuffer = NULL;
   int *int_tempbuffer = NULL;
  
@@ -417,6 +417,11 @@ int grid::NestedCosmologySimulationInitializeGrid(
       FieldType[NumberOfBaryonFields++] = SGSKinEn;
       FieldType[NumberOfBaryonFields++] = SGSMagEn;
     }    
+    if (UseKalmanFilter) {
+      FieldType[AveMomt1Num = NumberOfBaryonFields++] = AveMomtDensity1;
+      FieldType[AveMomt2Num = NumberOfBaryonFields++] = AveMomtDensity2;
+      FieldType[AveMomt3Num = NumberOfBaryonFields++] = AveMomtDensity3;
+    }    
   }
 
   if(QuantumPressure == 1){
@@ -556,6 +561,14 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  }
 	} // ENDFOR dim
       } // ENDIF grid velocities
+
+      if (UseKalmanFilter && ReadData) {
+        for (i = 0; i < size; i++) {
+          BaryonField[AveMomt1Num][i] = 0.0;
+          BaryonField[AveMomt2Num][i] = 0.0;
+          BaryonField[AveMomt3Num][i] = 0.0;
+        }
+      }
       
       // If using multi-species, set the fields
  
@@ -705,7 +718,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	    }
 	}
       } // end: if (ShockMethod && ReadData)
-
+      
     } // end: if (NumberOfBaryonFields > 0)
 
     // ------------------------------------------------------------ 
