@@ -103,7 +103,7 @@ c
      &           sndspdC=1.3095e8_RKIND,
      &           msolar=SolarMass,
      &           mproton=mass_h,
-     &           scale_sf=1.0e2_RKIND*pc)
+     &           scale_sf=1.0e1_RKIND*pc)
 c
       ii = np
       k1 = v1*v1
@@ -154,10 +154,15 @@ c              calculate effective crossing time from effective sound speed
 c              (eq. (4) in Semenov et al. 2016 in physical units)
 c
                isosndsp2 = sndspdC * temp(i,j,k)
-               effsndsp2 = isosndsp2 + 
-     &                     (2._RKIND*k1*ksgs(i,j,k)/d(i,j,k))*
-     &                     (scale_sf/dble(x1*dx))
-               tcr = 0.5_RKIND*(scale_sf/sqrt(effsndsp2))/t1
+c              se the following definition to scale down the turbulent
+c              kinetic energy to scale_sf
+c
+c               effsndsp2 = isosndsp2 + 
+c     &                     (2._RKIND*k1*ksgs(i,j,k)/d(i,j,k))*
+c     &                     (scale_sf/dble(x1*dx))
+c               tcr = 0.5_RKIND*(scale_sf/sqrt(effsndsp2))/t1
+               effsndsp2 = isosndsp2 + 2._RKIND*k1*ksgs(i,j,k)/d(i,j,k)
+               tcr = 0.5_RKIND*(dble(x1*dx)/sqrt(effsndsp2))/t1
 c
 c              calculate star formation efficiency per free-fall time
 c              (eq. (3), Semenov et al. 2016)
@@ -179,6 +184,24 @@ c
                gasfrac = min( 0.9_RKIND, epsff*dt/tdyn )          
 #endif
 
+#define NO_STOCHASTIC_STAR_FORMATION
+c
+#ifdef STOCHASTIC_STAR_FORMATION
+c
+c                 Keep global count of "unfullfilled" star formation
+c                 and when total is larger than threshold, then create
+c                 a star particle with the threshold mass or 1/2 the
+c                 gas in the cell, whichever is smaller.
+c
+               bmass = d(i,j,k)*dble(d1)*dble(x1*dx)**3 / msolar
+c
+               if (gasfrac*bmass .lt. smthresh) then
+                  sformsum = sformsum + gasfrac*bmass
+                  if (sformsum .lt. smthresh) goto 10
+                  gasfrac = min(smthresh/bmass, 0.5_RKIND)
+                  sformsum = sformsum - gasfrac*bmass
+               endif
+#else
 c              calculate star mass in solar masses.  If this is less than the
 c              user-defined threshold mass, do NOT make a star in this cell.
 c              This is not exactly in keeping with the spirit of the Kravtsov
@@ -188,16 +211,15 @@ c              but we really don't want millions and millions of star particles.
                starmass = gasfrac*d(i,j,k)*dble(d1)*dble(x1*dx)**3
      &                    / msolar
 c
-               if(starmass .lt. smthresh) goto 10
-
+               if (starmass .lt. smthresh) goto 10
+#endif
 c
 c              If both of these criteria are met, create a star particle
 c
                ii = ii + 1
-
-
+c
 c              Fill in star particle attributes
-
+c
                mp(ii)  = gasfrac * d(i,j,k)
                tcp(ii) = t
 #ifdef CONSTANT_EFFICIENCY
@@ -233,10 +255,19 @@ c              Remove mass from grid
 c
                d(i,j,k) = (1._RKIND - gasfrac)*d(i,j,k)
 c
+#ifdef STOCHASTIC_STAR_FORMATION
+               write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
+     &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
+     &            tdp(ii)*t2, tcp(ii)*t2, 
+     &            bmass*gasfrac, bmass*gasfrac/(dt*t1), 
+     &            bmass*gasfrac/(dt*t1*dble(x1*dx/Mpc)**3), 
+     &            metalf(ii)
+#else
                write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
      &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
      &            tdp(ii)*t2, tcp(ii)*t2, starmass, starmass/(dt*t1), 
      &            starmass/(dt*t1*dble(x1*dx/Mpc)**3), metalf(ii)
+#endif
 c
  1000          format(i5,1x,12(1pe10.3,1x))
 c
