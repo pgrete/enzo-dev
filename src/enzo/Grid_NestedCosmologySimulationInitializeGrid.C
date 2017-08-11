@@ -125,6 +125,8 @@ int grid::NestedCosmologySimulationInitializeGrid(
   int ExtraField[2];
   int ForbidNum;
   int MachNum, PSTempNum, PSDenNum;
+  int AveVel1Num, AveVel2Num, AveVel3Num;	
+  int VarVel1Num, VarVel2Num, VarVel3Num;	
  
   inits_type *tempbuffer = NULL;
   int *int_tempbuffer = NULL;
@@ -366,6 +368,9 @@ int grid::NestedCosmologySimulationInitializeGrid(
     FieldType[NumberOfBaryonFields++] = Bfield2;
     FieldType[NumberOfBaryonFields++] = Bfield3;
     FieldType[NumberOfBaryonFields++] = PhiField;
+    if (UseDivergenceCleaning) {
+      FieldType[NumberOfBaryonFields++] = Phi_pField;
+    }
   }
     if (MultiSpecies) {
       FieldType[DeNum    = NumberOfBaryonFields++] = ElectronDensity;
@@ -410,6 +415,14 @@ int grid::NestedCosmologySimulationInitializeGrid(
     if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
       FieldType[NumberOfBaryonFields++] = SGSKinEn;
       FieldType[NumberOfBaryonFields++] = SGSMagEn;
+    }    
+    if (UseKalmanFilter) {
+      FieldType[AveVel1Num = NumberOfBaryonFields++] = AveVelocity1;
+      FieldType[AveVel2Num = NumberOfBaryonFields++] = AveVelocity2;
+      FieldType[AveVel3Num = NumberOfBaryonFields++] = AveVelocity3;
+      FieldType[VarVel1Num = NumberOfBaryonFields++] = VarVelocity1;
+      FieldType[VarVel2Num = NumberOfBaryonFields++] = VarVelocity2;
+      FieldType[VarVel3Num = NumberOfBaryonFields++] = VarVelocity3;
     }    
   }
 
@@ -523,6 +536,17 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	} // ENDFOR dim
       } // ENDIF grid velocities
       
+      if (UseKalmanFilter && ReadData) {
+        for (i = 0; i < size; i++) {
+          BaryonField[AveVel1Num][i] = 0.0;
+          BaryonField[AveVel2Num][i] = 0.0;
+          BaryonField[AveVel3Num][i] = 0.0;
+          BaryonField[VarVel1Num][i] = 0.0;
+          BaryonField[VarVel2Num][i] = 0.0;
+          BaryonField[VarVel3Num][i] = 0.0;
+        }
+      }
+
       // If using multi-species, set the fields
  
       if (MultiSpecies && ReadData) {

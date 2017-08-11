@@ -2431,6 +2431,10 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
     
     /* END Subgrid-scale modeling framework by P. Grete */
 
+    // function to apply the Kalman filtering procedure                                                                                                     
+
+    int KalmanFiltering();
+
 /* Comoving coordinate expansion terms. */
 
   int ComovingExpansionTerms();

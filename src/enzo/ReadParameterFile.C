@@ -550,6 +550,10 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "SGScoeffSSb =%"FSYM, &SGScoeffSSb);
     ret += sscanf(line, "SGScoeffSSemf = %"FSYM, &SGScoeffSSemf);
 
+    ret += sscanf(line, "UseKalmanFilter = %"ISYM, &UseKalmanFilter);
+    ret += sscanf(line, "KalmanFilterCorrlTime = %"FSYM, &KalmanFilterCorrlTime);
+    ret += sscanf(line, "KalmanFilterVelocityScale = %"FSYM, &KalmanFilterVelocityScale);
+
 #ifdef USE_GRACKLE
     /* Grackle chemistry parameters */
     ret += sscanf(line, "use_grackle = %d", &grackle_data->use_grackle);

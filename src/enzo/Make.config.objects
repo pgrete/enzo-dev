@@ -482,6 +482,7 @@ OBJS_CONFIG_LIB = \
 	Grid_InterpolateParticlesToGrid.o \
 	Grid_InterpolatePositions.o \
         Grid_InterpolateStarParticlesToGrid.o \
+        Grid_KalmanFiltering.o \
 	Grid_KHInitializeGrid.o \
 	Grid_KHInitializeGridRamp.o \
         Grid_MagneticFieldResetter.o \

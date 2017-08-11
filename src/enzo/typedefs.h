@@ -174,7 +174,15 @@ const field_type
   SGSKinEn = 98,
   SGSMagEn = 99,
   
-  FieldUndefined  = 100;
+  /* Averaged quantities (used by Kalman filter) */
+  AveVelocity1 = 100,
+  AveVelocity2 = 101,
+  AveVelocity3 = 102,
+  VarVelocity1 = 103,
+  VarVelocity2 = 104,
+  VarVelocity3 = 105,
+
+  FieldUndefined  = 106;
 
 /*
 enum field_type {Density, TotalEnergy, InternalEnergy, Pressure,
