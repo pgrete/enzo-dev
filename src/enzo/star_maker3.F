@@ -263,11 +263,9 @@ c               write(7+procnum,1000) level,bmass*starfraction,tcp(ii),
 c     &                           tdp(ii)*t1,d(i,j,k)*d1,z,metalf(ii)
                write(7+procnum,1000) level, z, d(i,j,k)*d1/mass_h, 
      &            sqrt(isosndsp2), tdp(ii)*t2, tcp(ii)*t2, 
-     &            bmass*starfraction, bmass*starfraction/(dt*t1), 
-     &            bmass*starfraction/(dt*t1*dble(x1*dx/Mpc)**3), 
-     &            metalf(ii)
+     &            bmass*starfraction, metalf(ii)
 
- 1000          format(i5,1x,9(1pe10.3,1x))
+ 1000          format(i5,1x,7(1pe10.3,1x))
 c
 c              Do not generate more star particles than available
 c

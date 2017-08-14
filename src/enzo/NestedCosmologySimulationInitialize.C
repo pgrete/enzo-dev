@@ -761,16 +761,16 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
     }
   } 
   if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
-      DataLabel[i++] = SGSKinEnName;
-      DataLabel[i++] = SGSMagEnName;
+    DataLabel[i++] = SGSKinEnName;
+    DataLabel[i++] = SGSMagEnName;
   } 
   if (UseKalmanFilter) {
-     DataLabel[i++] = AveVel1Name;
-     DataLabel[i++] = AveVel2Name;
-     DataLabel[i++] = AveVel3Name;
-     DataLabel[i++] = VarVel1Name;
-     DataLabel[i++] = VarVel2Name;
-     DataLabel[i++] = VarVel3Name;
+    DataLabel[i++] = AveVel1Name;
+    DataLabel[i++] = AveVel2Name;
+    DataLabel[i++] = AveVel3Name;
+    DataLabel[i++] = VarVel1Name;
+    DataLabel[i++] = VarVel2Name;
+    DataLabel[i++] = VarVel3Name;
   } 
  
 

@@ -258,18 +258,14 @@ c
 #ifdef STOCHASTIC_STAR_FORMATION
                write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
      &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
-     &            tdp(ii)*t2, tcp(ii)*t2, 
-     &            bmass*gasfrac, bmass*gasfrac/(dt*t1), 
-     &            bmass*gasfrac/(dt*t1*dble(x1*dx/Mpc)**3), 
-     &            metalf(ii)
+     &            tdp(ii)*t2, tcp(ii)*t2, bmass*gasfrac, metalf(ii)
 #else
                write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
      &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
-     &            tdp(ii)*t2, tcp(ii)*t2, starmass, starmass/(dt*t1), 
-     &            starmass/(dt*t1*dble(x1*dx/Mpc)**3), metalf(ii)
+     &            tdp(ii)*t2, tcp(ii)*t2, starmass, metalf(ii)
 #endif
 c
- 1000          format(i5,1x,12(1pe10.3,1x))
+ 1000          format(i5,1x,10(1pe10.3,1x))
 c
 c              Do not generate more star particles than available
 c
