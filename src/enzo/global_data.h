@@ -407,6 +407,7 @@ EXTERN float SGScoeffSSemf;
 /* Kalman filter parameters */
 EXTERN int UseKalmanFilter;
 EXTERN float KalmanFilterCorrlTime;
+EXTERN float KalmanFilterVelocityScale;
 
 /* Multi-species rate equation flag and associated data. */
 

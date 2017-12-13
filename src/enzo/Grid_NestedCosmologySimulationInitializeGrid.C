@@ -126,7 +126,8 @@ int grid::NestedCosmologySimulationInitializeGrid(
   int ForbidNum;
   int MachNum, PSTempNum, PSDenNum;
   int RePsiNum, ImPsiNum, FDMDensNum;
-  int AveMomt1Num, AveMomt2Num, AveMomt3Num;	
+  int AveVel1Num, AveVel2Num, AveVel3Num;	
+  int VarVel1Num, VarVel2Num, VarVel3Num;	
 
   inits_type *tempbuffer = NULL;
   int *int_tempbuffer = NULL;
@@ -418,9 +419,12 @@ int grid::NestedCosmologySimulationInitializeGrid(
       FieldType[NumberOfBaryonFields++] = SGSMagEn;
     }    
     if (UseKalmanFilter) {
-      FieldType[AveMomt1Num = NumberOfBaryonFields++] = AveMomtDensity1;
-      FieldType[AveMomt2Num = NumberOfBaryonFields++] = AveMomtDensity2;
-      FieldType[AveMomt3Num = NumberOfBaryonFields++] = AveMomtDensity3;
+      FieldType[AveVel1Num = NumberOfBaryonFields++] = AveVelocity1;
+      FieldType[AveVel2Num = NumberOfBaryonFields++] = AveVelocity2;
+      FieldType[AveVel3Num = NumberOfBaryonFields++] = AveVelocity3;
+      FieldType[VarVel1Num = NumberOfBaryonFields++] = VarVelocity1;
+      FieldType[VarVel2Num = NumberOfBaryonFields++] = VarVelocity2;
+      FieldType[VarVel3Num = NumberOfBaryonFields++] = VarVelocity3;
     }    
   }
 
@@ -478,7 +482,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
  
       if (ReadData == TRUE)
         this->AllocateGrids();
- 
+
       // Read the density field
  
       if (CosmologySimulationDensityName != NULL && ReadData) {
@@ -564,9 +568,12 @@ int grid::NestedCosmologySimulationInitializeGrid(
 
       if (UseKalmanFilter && ReadData) {
         for (i = 0; i < size; i++) {
-          BaryonField[AveMomt1Num][i] = 0.0;
-          BaryonField[AveMomt2Num][i] = 0.0;
-          BaryonField[AveMomt3Num][i] = 0.0;
+          BaryonField[AveVel1Num][i] = 0.0;
+          BaryonField[AveVel2Num][i] = 0.0;
+          BaryonField[AveVel3Num][i] = 0.0;
+          BaryonField[VarVel1Num][i] = 0.0;
+          BaryonField[VarVel2Num][i] = 0.0;
+          BaryonField[VarVel3Num][i] = 0.0;
         }
       }
       

@@ -128,7 +128,8 @@ int grid::CosmologySimulationInitializeGrid(
 #endif
   int MachNum, PSTempNum, PSDenNum;
   int kphHINum, kphHeINum, kphHeIINum, kdissH2INum, PhotoGammaNum;
-  int AveMomt1Num, AveMomt2Num, AveMomt3Num;	
+  int AveVel1Num, AveVel2Num, AveVel3Num;	
+  int VarVel1Num, VarVel2Num, VarVel3Num;	
  
   int ExtraField[2];
   int ForbidNum, iTE, iCR;
@@ -319,10 +320,13 @@ int grid::CosmologySimulationInitializeGrid(
       FieldType[NumberOfBaryonFields++] = SGSMagEn;
     }
     if (UseKalmanFilter) {
-      FieldType[AveMomt1Num = NumberOfBaryonFields++] = AveMomtDensity1;
-      FieldType[AveMomt2Num = NumberOfBaryonFields++] = AveMomtDensity2;
-      FieldType[AveMomt3Num = NumberOfBaryonFields++] = AveMomtDensity3;
-    }    
+      FieldType[AveVel1Num = NumberOfBaryonFields++] = AveVelocity1;
+      FieldType[AveVel2Num = NumberOfBaryonFields++] = AveVelocity2;
+      FieldType[AveVel3Num = NumberOfBaryonFields++] = AveVelocity3;
+      FieldType[VarVel1Num = NumberOfBaryonFields++] = VarVelocity1;
+      FieldType[VarVel2Num = NumberOfBaryonFields++] = VarVelocity2;
+      FieldType[VarVel3Num = NumberOfBaryonFields++] = VarVelocity3;
+   }    
   }
  
   // Set the subgrid static flag
@@ -448,6 +452,17 @@ int grid::CosmologySimulationInitializeGrid(
       BaryonField[EgNum][i] = RadScaled;
   }
 #endif
+
+  if (UseKalmanFilter && ReadData) {
+    for (i = 0; i < size; i++) {
+      BaryonField[AveVel1Num][i] = 0.0;
+      BaryonField[AveVel2Num][i] = 0.0;
+      BaryonField[AveVel3Num][i] = 0.0;
+      BaryonField[VarVel1Num][i] = 0.0;
+      BaryonField[VarVel2Num][i] = 0.0;
+      BaryonField[VarVel3Num][i] = 0.0;
+    }
+  }      
  
   // If using multi-species, set the fields
  
@@ -616,15 +631,6 @@ int grid::CosmologySimulationInitializeGrid(
       }  // if(UseMHDCT == TRUE)              
     }
   }
-
-  if (UseKalmanFilter) {
-    for (int i = 0; i < size; i++) {
-      BaryonField[AveMomt1Num][i] = 0.0;
-      BaryonField[AveMomt2Num][i] = 0.0;
-      BaryonField[AveMomt3Num][i] = 0.0;
-    }
-  }
-
 
   } // end: if (NumberOfBaryonFields > 0)
  

@@ -537,6 +537,7 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   fprintf(fptr, "use_grackle                 = %"ISYM"\n", use_grackle);
   fprintf(fptr, "UseKalmanFilter                = %"ISYM"\n", UseKalmanFilter);
   fprintf(fptr, "KalmanFilterCorrlTime          = %"FSYM"\n", KalmanFilterCorrlTime);
+  fprintf(fptr, "KalmanFilterVelocityScale      = %"FSYM"\n", KalmanFilterVelocityScale);
 #ifdef USE_GRACKLE
   /* Grackle chemistry parameters */
   fprintf(fptr, "with_radiative_cooling      = %d\n", grackle_data->with_radiative_cooling);

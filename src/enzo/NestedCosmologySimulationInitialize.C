@@ -137,10 +137,13 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *FDMDensityName = "FDMDensity"; 
   char *SGSKinEnName = "SGSKinEn";
   char *SGSMagEnName = "SGSMagEn";
-  char *AveMomt1Name = "AveMomtX";
-  char *AveMomt2Name = "AveMomtY";
-  char *AveMomt3Name = "AveMomtZ";
- 
+  char *AveVel1Name = "x-velocity_ave";
+  char *AveVel2Name = "y-velocity_ave";
+  char *AveVel3Name = "z-velocity_ave";
+  char *VarVel1Name = "x-velocity_var";
+  char *VarVel2Name = "y-velocity_var";
+  char *VarVel3Name = "z-velocity_var";
+
   char *ExtraNames[2] = {"Z_Field1", "Z_Field2"};
  
   // Declarations
@@ -768,13 +771,16 @@ int NestedCosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   }
 
   if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
-     DataLabel[i++] = SGSKinEnName;
-     DataLabel[i++] = SGSMagEnName;
+    DataLabel[i++] = SGSKinEnName;
+    DataLabel[i++] = SGSMagEnName;
   } 
   if (UseKalmanFilter) {
-     DataLabel[i++] = AveMomt1Name;
-     DataLabel[i++] = AveMomt2Name;
-     DataLabel[i++] = AveMomt3Name;
+    DataLabel[i++] = AveVel1Name;
+    DataLabel[i++] = AveVel2Name;
+    DataLabel[i++] = AveVel3Name;
+    DataLabel[i++] = VarVel1Name;
+    DataLabel[i++] = VarVel2Name;
+    DataLabel[i++] = VarVel3Name;
   } 
  
 

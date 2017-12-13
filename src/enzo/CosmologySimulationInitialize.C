@@ -138,9 +138,12 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
   char *Phi_pName = "Phip";
   char *SGSKinEnName = "SGSKinEn";
   char *SGSMagEnName = "SGSMagEn";
-  char *AveMomt1Name = "AveMomtX";
-  char *AveMomt2Name = "AveMomtY";
-  char *AveMomt3Name = "AveMomtZ";
+  char *AveVel1Name = "x-velocity_ave";
+  char *AveVel2Name = "y-velocity_ave";
+  char *AveVel3Name = "z-velocity_ave";
+  char *VarVel1Name = "x-velocity_var";
+  char *VarVel2Name = "y-velocity_var";
+  char *VarVel3Name = "z-velocity_var";
 
 #ifdef TRANSFER
   char *RadName = "Grey_Radiation_Energy";
@@ -826,9 +829,12 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
      DataLabel[i++] = SGSMagEnName;
   }
   if (UseKalmanFilter) {
-     DataLabel[i++] = AveMomt1Name;
-     DataLabel[i++] = AveMomt2Name;
-     DataLabel[i++] = AveMomt3Name;
+     DataLabel[i++] = AveVel1Name;
+     DataLabel[i++] = AveVel2Name;
+     DataLabel[i++] = AveVel3Name;
+     DataLabel[i++] = VarVel1Name;
+     DataLabel[i++] = VarVel2Name;
+     DataLabel[i++] = VarVel3Name;
   } 
 
   for (j = 0; j < i; j++)

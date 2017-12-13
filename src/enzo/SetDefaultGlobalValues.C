@@ -456,7 +456,8 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   SGScoeffNLb = 0.0; // off
 
   UseKalmanFilter = 0; // off
-  KalmanFilterCorrlTime = tiny_number; // average quantities equal to instantaneous quantities
+  KalmanFilterCorrlTime = huge_number; // zero error variance
+  KalmanFilterVelocityScale = tiny_number; 
 
   RadiativeCooling            = FALSE;             // off
   RadiativeCoolingModel       = 1;                 //1=cool_rates.in table lookup
