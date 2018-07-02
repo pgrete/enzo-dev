@@ -101,7 +101,7 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
         }
 
         if (SGSTrackInstantaneousSGSEnergies)
-            BaryonField[SGSKinEnNum][igrid] = 0.5 * (Tau[XX][igrid] + Tau[YY][igrid] + Tau[ZZ][igrid]);
+            BaryonField[SGSKinEnNum][igrid] = 0.5 * (Tau[SGSXX][igrid] + Tau[SGSYY][igrid] + Tau[SGSZZ][igrid]);
 
       }
 
