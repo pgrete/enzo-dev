@@ -184,7 +184,7 @@ c
                gasfrac = min( 0.9_RKIND, epsff*dt/tdyn )          
 #endif
 
-#define NO_STOCHASTIC_STAR_FORMATION
+#define STOCHASTIC_STAR_FORMATION
 c
 #ifdef STOCHASTIC_STAR_FORMATION
 c
@@ -256,13 +256,13 @@ c
                d(i,j,k) = (1._RKIND - gasfrac)*d(i,j,k)
 c
 #ifdef STOCHASTIC_STAR_FORMATION
-               write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
-     &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
-     &            tdp(ii)*t2, tcp(ii)*t2, bmass*gasfrac, metalf(ii)
+c               write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
+c     &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
+c     &            tdp(ii)*t2, tcp(ii)*t2, bmass*gasfrac, metalf(ii)
 #else
-               write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
-     &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
-     &            tdp(ii)*t2, tcp(ii)*t2, starmass, metalf(ii)
+c               write(7+procnum,1000) level, z, d(i,j,k)*d1/mproton, 
+c     &            sqrt(isosndsp2), sqrt(effsndsp2), tcr*t2, tdyn*t2,  
+c     &            tdp(ii)*t2, tcp(ii)*t2, starmass, metalf(ii)
 #endif
 c
  1000          format(i5,1x,10(1pe10.3,1x))
