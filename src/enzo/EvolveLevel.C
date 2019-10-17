@@ -688,6 +688,12 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       }*/
 #endif
 
+      /* Apply Kalman filter for temporal smoothing */
+      if (UseKalmanFilter) {
+         if (Grids[grid1]->GridData->KalmanFiltering() == FAIL) {
+            ENZO_FAIL("Error in grid->KalmanFiltering.\n");;
+         }
+      }
 
       /* Include 'star' particle creation and feedback. */
 

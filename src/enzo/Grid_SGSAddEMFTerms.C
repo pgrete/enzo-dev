@@ -28,6 +28,8 @@
 #include "ExternalBoundary.h"
 #include "Grid.h"
 
+int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
+
 /* 
  * This function adds to the EMF 
  * the pure (unscaled) full (compressible) nonlinear model:
@@ -313,10 +315,16 @@ int grid::SGS_AddEMFTerms(float **dU) {
     int n = 0;
     int igrid, ip1, im1, jp1, jm1, kp1, km1;
     float BxIncr,ByIncr,BzIncr,EtotIncr;
+    
+    float a = 1.0, dadt = 0.0;
+    if (ComovingCoordinates && Time > tiny_number)
+        if (CosmologyComputeExpansionFactor(Time, &a, &dadt) == FAIL)
+            fprintf(stderr, "grid::ComputeSGSTerms: Error in CosmologyComputeExpansionFactors.\n");
 
-    float facX = 1. / (2. * CellWidth[0][0]);
-    float facY = 1. / (2. * CellWidth[1][0]);
-    float facZ = 1. / (2. * CellWidth[2][0]);
+
+    float facX = 1. / (2. * a * CellWidth[0][0]);
+    float facY = 1. / (2. * a * CellWidth[1][0]);
+    float facZ = 1. / (2. * a * CellWidth[2][0]);
 
     for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++)
         for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++)

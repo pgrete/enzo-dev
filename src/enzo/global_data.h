@@ -390,6 +390,7 @@ EXTERN int UseSGSModel;
 EXTERN int SGSFilterStencil;
 EXTERN int SGSNeedJacobians;
 EXTERN int SGSNeedMixedFilteredQuantities;
+EXTERN int SGSTrackInstantaneousSGSEnergies;
 EXTERN float SGSFilterWidth;
 EXTERN float SGSFilterWeights[4];
 EXTERN float SGScoeffERS2M2Star;
@@ -402,6 +403,11 @@ EXTERN float SGScoeffNLb;
 EXTERN float SGScoeffSSu;
 EXTERN float SGScoeffSSb;
 EXTERN float SGScoeffSSemf;
+
+/* Kalman filter parameters */
+EXTERN int UseKalmanFilter;
+EXTERN float KalmanFilterCorrlTime;
+EXTERN float KalmanFilterVelocityScale;
 
 /* Multi-species rate equation flag and associated data. */
 

@@ -128,6 +128,8 @@ int grid::CosmologySimulationInitializeGrid(
 #endif
   int MachNum, PSTempNum, PSDenNum;
   int kphHINum, kphHeINum, kphHeIINum, kdissH2INum, PhotoGammaNum;
+  int AveVel1Num, AveVel2Num, AveVel3Num;	
+  int VarVel1Num, VarVel2Num, VarVel3Num;	
  
   int ExtraField[2];
   int ForbidNum, iTE, iCR;
@@ -311,7 +313,20 @@ int grid::CosmologySimulationInitializeGrid(
 	FieldType[PSTempNum = NumberOfBaryonFields++] = PreShockTemperature;
 	FieldType[PSDenNum = NumberOfBaryonFields++] = PreShockDensity;
       }
-    }    
+    }
+
+    if (UseSGSModel && SGSTrackInstantaneousSGSEnergies) {
+      FieldType[NumberOfBaryonFields++] = SGSKinEn;
+      FieldType[NumberOfBaryonFields++] = SGSMagEn;
+    }
+    if (UseKalmanFilter) {
+      FieldType[AveVel1Num = NumberOfBaryonFields++] = AveVelocity1;
+      FieldType[AveVel2Num = NumberOfBaryonFields++] = AveVelocity2;
+      FieldType[AveVel3Num = NumberOfBaryonFields++] = AveVelocity3;
+      FieldType[VarVel1Num = NumberOfBaryonFields++] = VarVelocity1;
+      FieldType[VarVel2Num = NumberOfBaryonFields++] = VarVelocity2;
+      FieldType[VarVel3Num = NumberOfBaryonFields++] = VarVelocity3;
+   }    
   }
  
   // Set the subgrid static flag
@@ -437,6 +452,17 @@ int grid::CosmologySimulationInitializeGrid(
       BaryonField[EgNum][i] = RadScaled;
   }
 #endif
+
+  if (UseKalmanFilter && ReadData) {
+    for (i = 0; i < size; i++) {
+      BaryonField[AveVel1Num][i] = 0.0;
+      BaryonField[AveVel2Num][i] = 0.0;
+      BaryonField[AveVel3Num][i] = 0.0;
+      BaryonField[VarVel1Num][i] = 0.0;
+      BaryonField[VarVel2Num][i] = 0.0;
+      BaryonField[VarVel3Num][i] = 0.0;
+    }
+  }      
  
   // If using multi-species, set the fields
  

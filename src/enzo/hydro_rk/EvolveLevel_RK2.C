@@ -499,6 +499,11 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
         time1 = ReturnWallTime();
 
+        /* Apply Kalman filter for temporal smoothing */
+
+        if (UseKalmanFilter)
+          Grids[grid1]->GridData->KalmanFiltering();
+     
         /* Add viscosity */
 
         if (UseViscosity) 

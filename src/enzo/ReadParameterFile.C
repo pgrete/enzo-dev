@@ -572,6 +572,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     
     ret += sscanf(line, "UseSGSModel = %"ISYM, &UseSGSModel);
     ret += sscanf(line, "SGSFilterStencil = %"ISYM, &SGSFilterStencil);
+    ret += sscanf(line, "SGSTrackInstantaneousSGSEnergies = %"ISYM, &SGSTrackInstantaneousSGSEnergies);
     ret += sscanf(line, "SGSFilterWidth = %"FSYM, &SGSFilterWidth);
     ret += sscanf(line, "SGSFilterWeights = %"FSYM"%"FSYM"%"FSYM"%"FSYM,
         &SGSFilterWeights[0],&SGSFilterWeights[1],&SGSFilterWeights[2],&SGSFilterWeights[3]);
@@ -585,8 +586,11 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "SGScoeffSSu = %"FSYM, &SGScoeffSSu);
     ret += sscanf(line, "SGScoeffSSb =%"FSYM, &SGScoeffSSb);
     ret += sscanf(line, "SGScoeffSSemf = %"FSYM, &SGScoeffSSemf);
-
     ret += sscanf(line, "use_grackle = %"ISYM, &use_grackle);
+    ret += sscanf(line, "UseKalmanFilter = %"ISYM, &UseKalmanFilter);
+    ret += sscanf(line, "KalmanFilterCorrlTime = %"FSYM, &KalmanFilterCorrlTime);
+    ret += sscanf(line, "KalmanFilterVelocityScale = %"FSYM, &KalmanFilterVelocityScale);
+
 #ifdef USE_GRACKLE
     /* Grackle chemistry parameters */
     ret += sscanf(line, "with_radiative_cooling = %d",

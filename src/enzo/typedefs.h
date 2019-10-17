@@ -171,15 +171,28 @@ const field_type
   CRDensity = 97,
  
   /* IR photodetachment fields */
-  kdissH2II = 98,
-  kphHM     = 99,
+  kdissH2II = 106,
+  kphHM     = 107,
 
   /* Real and Imag of Wave Function */
-  RePsi = 101,
-  ImPsi = 102,
-  FDMDensity = 103,
+  RePsi = 108,
+  ImPsi = 109,
+  FDMDensity = 110,
 
-  FieldUndefined  = 104;
+  /* SGS energies */
+  SGSKinEn = 98,
+  SGSMagEn = 99,
+
+  /* Averaged quantities (used by Kalman filter) */
+
+  AveVelocity1 = 100,
+  AveVelocity2 = 101,
+  AveVelocity3 = 102,
+  VarVelocity1 = 103,
+  VarVelocity2 = 104,
+  VarVelocity3 = 105,
+
+  FieldUndefined  = 111;
 
 /*
 enum field_type {Density, TotalEnergy, InternalEnergy, Pressure,
